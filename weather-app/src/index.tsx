@@ -1,16 +1,53 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LoginForm from "./pages/LoginForm";
+import RegisterForm from "./pages/RegisterForm";
+import WeatherForm from "./pages/WeatherForm";
+import AuthProvider from "./contexts/auth-context";
+import Layout from "./Layout";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+	document.getElementById("root") as HTMLElement
 );
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: (
+			<Layout>
+				<h1> Accueil</h1>
+			</Layout>
+		),
+	},
+	{
+		path: "/inscription",
+		element: (
+				<RegisterForm />
+		),
+	},
+	{
+		path: "/connexion",
+		element: (
+				<LoginForm />
+		),
+	},
+	{
+		path: "/meteo",
+		element: (
+			<Layout>
+				<WeatherForm />
+			</Layout>
+		),
+	},
+]);
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+	<AuthProvider>
+		<RouterProvider router={router} />
+	</AuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
