@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
-    const [token, setPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const {auth, setAuthData} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function LoginForm() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email, token })
+                body: JSON.stringify({ email, password })
             });
             const data = await response.json();
             console.log(`Données de login : ${data}`);

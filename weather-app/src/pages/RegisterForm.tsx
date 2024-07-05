@@ -28,7 +28,6 @@ export default function RegisterForm() {
             body: JSON.stringify(values)
         });
         const data = await response.json();
-        console.log(data);
     }
 
     return(

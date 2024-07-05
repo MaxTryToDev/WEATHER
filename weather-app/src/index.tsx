@@ -19,19 +19,25 @@ const router = createBrowserRouter([
 		element: (
 			<Layout>
 				<h1> Accueil</h1>
+				<img src="./pictures/meteo.png"></img>
+				<img src="pictures/bresser.jpg"></img>
 			</Layout>
 		),
 	},
 	{
 		path: "/inscription",
 		element: (
+			<Layout>
 				<RegisterForm />
+			</Layout>
 		),
 	},
 	{
 		path: "/connexion",
 		element: (
+			<Layout>
 				<LoginForm />
+			</Layout>
 		),
 	},
 	{

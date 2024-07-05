@@ -1,5 +1,7 @@
 //Import des dépendances
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../contexts/auth-context";
+import { useNavigate } from "react-router-dom";
 
 //Déclaration des types
 type AwekasData = {
@@ -48,15 +50,29 @@ function formatDate(timeStamp: number): String{
 
 export default function WeatherForm() {
     const [weather, setWeather] = useState<AwekasData>();
+    const {auth, setAuthData} = useContext(AuthContext);
+    const navigate = useNavigate();
 	
 	useEffect(() => {
 		async function loadWeather() {
-			const response = await fetch(`${process.env.REACT_APP_API_URL}/weather`)
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/weather`,
+			{
+				headers: {
+				  Authorization: auth?.data?.token ?? "",
+				},
+			  }
+			);
             const data: AwekasData = await response.json();
             setWeather(data);
 		}
         loadWeather();
 	}, []);
+
+    useEffect(() => {
+        if (auth?.data?.email) {
+            navigate("/meteo");
+        }
+    }, [auth, navigate]);
 
     if(!weather?.current) return <div>Chargement des données ...</div>;
 	return (
@@ -71,8 +87,6 @@ export default function WeatherForm() {
             <div>Index UV : {formatUv(weather.current.uv)}</div>
             <div>Température intérieure : {formatTemp(weather.current.indoortemperature)}</div>
             <div>Humidité intérieure : {formatHumidity(weather.current.indoorhumidity)}</div>
-
-            <div>Variable d'environnement : {process.env.REACT_APP_API_URL}</div>
         </div>
     );
 }

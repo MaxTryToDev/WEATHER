@@ -44,7 +44,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 //Route d'accès à la station météo
-app.get("/weather", async (req: Request, res: Response) => {
+app.get("/weather", authMiddleware, async (req: Request, res: Response) => {
   const response = await fetch(`https://api.awekas.at/current.php?key=${process.env.KEY}`);
   const data= await response.json();
   res.json(data);
@@ -100,7 +100,7 @@ app.post("/register", validationMiddleware(registerSchema), async function (req,
 //Login
 app.post("/login",  validationMiddleware(loginSchema), async function (req: Request, res: Response) {
     const { email, password } = req.body;
-    console.log("TEST");
+
     // Récupérer l'utilisateur qui a cette adresse e-mail dans la base de données
     const [result] = await db.query<RowDataPacket[]>(
       `SELECT id, email, password FROM awekasUsers WHERE email = ?`,
@@ -114,7 +114,6 @@ app.post("/login",  validationMiddleware(loginSchema), async function (req: Requ
       res.status(400).send("Invalid email");
       return;
     }
-    console.log("Utilisateur OK");
 
     // Si l'utilisateur existe, vérifier le mot de passe
     const isValidPassword = await bcrypt.compare(password, user[0].password);
@@ -123,7 +122,6 @@ app.post("/login",  validationMiddleware(loginSchema), async function (req: Requ
       res.status(400).send("Invalid password");
       return;
     }
-    console.log("Mot de passe OK");
 
     // Si le mot de passe est correct
     const tokenPayload = { id: user[0].id };
